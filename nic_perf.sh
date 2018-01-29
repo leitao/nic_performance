@@ -6,7 +6,7 @@ TARGET=localhost
 
 
 echo Multiples Thread
-for i in 1 2 4 8 16 32; do
+for i in 1 2 3 4; do
 	echo -n $i " Thread(s): "
 	RESULT=$($IPERF -c $TARGET -P $i 2> /dev/null | tail -1);
 	echo $RESULT | awk -F'GBytes' '{print $2}'
