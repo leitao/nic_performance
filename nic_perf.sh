@@ -34,7 +34,7 @@ for i in 1 2 8 32; do
 		$IPERF3 -c $TARGET -P $i
 	else
 		RESULT=$($IPERF3 -c $TARGET -P $i  2> /dev/null | tail -4 | head -1 );
-		echo $RESULT | awk -F"GBytes" '{print $2}' | awk '{print $1 " " $2}'
+		echo $RESULT | awk -F"GBytes" '{print $2}' | awk '{printf $1 " " $2}'
 	fi
 	CPU_UTILIZATION=$(cat cpu_$i.txt);
 	echo " (CPU utilization: " $CPU_UTILIZATION  ")"
