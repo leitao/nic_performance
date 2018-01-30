@@ -3,6 +3,7 @@
 IPERF=/usr/bin/iperf
 IPERF3=/usr/bin/iperf3
 TARGET=localhost
+NUMA="numactl -l"
 
 #DEBUG=0
 
@@ -19,7 +20,7 @@ for i in 1 2 8 32; do
 	if [ -n "$DEBUG" ] ; then
 		$IPERF3 -c $TARGET -P $i
 	else
-		RESULT=$($IPERF3 -c $TARGET -P $i  2> /dev/null | tail -4 | head -1 );
+		RESULT=$($NUMA $IPERF3 -c $TARGET -P $i  2> /dev/null | tail -4 | head -1 );
 		echo $RESULT | awk -F"GBytes" '{print $2}' | awk '{printf $1 " " $2}'
 	fi
 	CPU_UTILIZATION=$(cat cpu_$i);
@@ -33,7 +34,7 @@ for i in 1 3 4 8; do
 	if [ -n "$DEBUG" ] ; then
 		$IPERF -c $TARGET -P $i;
 	else
-		RESULT=$($IPERF -c $TARGET -P $i 2> /dev/null | tail -1);
+		RESULT=$($NUMA $IPERF -c $TARGET -P $i 2> /dev/null | tail -1);
 		echo -n $RESULT | awk -F'GBytes' '{printf $2}'
 	fi
 	CPU_UTILIZATION=$(cat cpu_$i);
