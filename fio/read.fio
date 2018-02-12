@@ -12,3 +12,4 @@ runtime=90
 size=10G
 ioengine=libaio
 iodepth=16
+filename=/media/read

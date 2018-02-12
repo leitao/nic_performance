@@ -1,5 +1,6 @@
 [global]
-name=fio-seqwrite
+name=seqwrite
+filename=seqwrite
 rw=write
 bs=256K
 direct=0
@@ -11,4 +12,3 @@ runtime=900
 size=10G
 ioengine=libaio
 iodepth=16
-filename=/media/seqwrite
