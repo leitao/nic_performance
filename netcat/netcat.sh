@@ -5,6 +5,7 @@ FILE=${2:0}
 NUMA="numactl -l"
 PORT=2048
 FILESIZE=$(stat -c%s "$FILE")
+NC=ncat
 
 
 echo Target: $TARGET
@@ -16,7 +17,7 @@ echo ---------------
 sleep 1
 
 ./cpu_utilization.sh utilization.txt & 
-OUTPUT=$( { dd if=$FILE bs=1024K count=512 | nc -N $TARGET $PORT; } 2>&1 )
+OUTPUT=$( { dd if=$FILE bs=1024K count=512 | $NC -N $TARGET $PORT; } 2>&1 )
 
 echo -n "Throughput: "
 echo -n $OUTPUT | awk '{printf $(NF-1) $NF}'
