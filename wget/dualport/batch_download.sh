@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash  -x
 
 TARGET1=10.1.1.9
 TARGET2=192.168.1.9
@@ -10,11 +10,13 @@ FLAGS=" -b --no-check-certificate"
 
 for i in `seq 2 $PARTS`; do
 	wget $FLAGS $HTTP://$TARGET2/nvme1/$FILE.part_$i $OUTPUT
+#	wget $FLAGS $HTTP://$TARGET2/ram/$FILE.part_$i $OUTPUT
 	wget $FLAGS $HTTP://$TARGET1/nvme2/$FILE.part_$i $OUTPUT
+#	wget $FLAGS $HTTP://$TARGET1/ram/$FILE.part_$i $OUTPUT
 done
-SPEED=$(wget --no-check-certificate $HTTP://$TARGET1/nvme1/$FILE.part_1 2>&1 | grep saved | awk -F'(' '{print $2}' | awk -F')' '{print $1}' | cut -d' ' -f1)
+SPEED=$(wget --no-check-certificate $HTTP://$TARGET1/ram/$FILE.part_1 2>&1 | grep saved | awk -F'(' '{print $2}' | awk -F')' '{print $1}' | cut -d' ' -f1)
 
-sleep 1
+sleep 10
 
 echo "Saving to disk:"
 echo "---------------"
