@@ -1,30 +1,42 @@
-#!/bin/bash 
+#!/bin/bash
 
-TARGET=${1:-localhost}    
-FILE=${2:0}
+TARGET1=10.1.1.8
+TARGET2=192.168.1.8
+FILE=bigimage
 NUMA="numactl -l"
 PORT=2048
 FILESIZE=$(stat -c%s "$FILE")
 NC=ncat
+INSTANCES=20
 
 
 echo Target: $TARGET
 echo File: $FILE
 echo Size:  $FILESIZE
 echo ---------------
-./set_target.sh $TARGET &
+#./set_target.sh $TARGET &
 
 sleep 1
 
 ./cpu_utilization.sh utilization.txt & 
-OUTPUT=$( { dd if=$FILE bs=1024K count=512 | $NC -N $TARGET $PORT; } 2>&1 )
+for i in `seq 1 2 $INSTANCES` ;
+do
+	echo "Starting instance: " $i
+	dd if=/data/nvme1/$FILE bs=1024K count=512 2> /tmp/nc_1_$i | $NC $TARGET1 $(( $PORT + $i )) &
+	dd if=/data/nvme2/$FILE bs=1024K count=512 2> /tmp/nc_2_$i | $NC $TARGET2 $(( $PORT + $i + 1 )) &
+done
+	dd if=/data/nvme1/$FILE bs=1024K count=512 2> /tmp/nc_1_0 | $NC $TARGET1 $PORT
+	dd if=/data/nvme2/$FILE bs=1024K count=512 2> /tmp/nc_2_0 | $NC $TARGET2  $(( $PORT + 1))
 
-echo -n "Throughput: "
-echo -n $OUTPUT | awk '{printf $(NF-1) $NF}'
 
-echo -n " - CPU Utilization: "
-cat utilization.txt
+sleep 2
+TOTAL=0
 
-exec 2>/dev/null
+for z in /tmp/nc_*; do
+	MB=$( tail -1 $z | awk '{printf $(NF-1)}') 
+	TOTAL=$(( $TOTAL + $MB ))
+done
+echo -n $(( $TOTAL * 8  / 1000 ))
+echo Gbps
 
-killall set_target.sh 
+rm /tmp/nc_*
