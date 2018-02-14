@@ -1,8 +1,7 @@
 #!/bin/bash
 
 TARGET=$1
-USER=brenohl
-SSH="ssh $USER@$TARGET"
+SSH="ssh $TARGET"
 PORT=2048
 NC=ncat
 
