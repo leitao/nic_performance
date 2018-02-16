@@ -5,28 +5,26 @@ TARGET2=192.168.1.8
 FILE=bigimage
 NUMA="numactl -l"
 PORT=2048
-FILESIZE=$(stat -c%s "$FILE")
 NC=ncat
+SSL=--ssl
 INSTANCES=20
 
 
 echo Target: $TARGET
 echo File: $FILE
-echo Size:  $FILESIZE
 echo ---------------
 #./set_target.sh $TARGET &
 
 sleep 1
 
-./cpu_utilization.sh utilization.txt & 
 for i in `seq 1 2 $INSTANCES` ;
 do
 	echo "Starting instance: " $i
-	dd if=/data/nvme1/$FILE bs=1024K count=512 2> /tmp/nc_1_$i | $NC $TARGET1 $(( $PORT + $i )) &
-	dd if=/data/nvme2/$FILE bs=1024K count=512 2> /tmp/nc_2_$i | $NC $TARGET2 $(( $PORT + $i + 1 )) &
+	dd if=/data/ram/$FILE bs=1024K 2> /tmp/nc_1_$i | $NC $SSL $TARGET1 $(( $PORT + $i )) &
+	dd if=/data/ram/$FILE bs=1024K 2> /tmp/nc_2_$i | $NC $SSL $TARGET2 $(( $PORT + $i + 1 )) &
 done
-	dd if=/data/nvme1/$FILE bs=1024K count=512 2> /tmp/nc_1_0 | $NC $TARGET1 $PORT
-	dd if=/data/nvme2/$FILE bs=1024K count=512 2> /tmp/nc_2_0 | $NC $TARGET2  $(( $PORT + 1))
+	dd if=/data/ram/$FILE bs=1024K 2> /tmp/nc_1_0 | $NC $SSL $TARGET1 $PORT
+	dd if=/data/ram/$FILE bs=1024K 2> /tmp/nc_2_0 | $NC $SSL $TARGET2  $(( $PORT + 1))
 
 
 sleep 2
