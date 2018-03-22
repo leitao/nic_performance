@@ -33,3 +33,13 @@ sysctl -w net.ipv4.tcp_mtu_probing=1
 
 # recommended for CentOS7/Debian8 hosts
 sysctl -w net.core.default_qdisc=fq
+
+
+sysctl -w net.core.somaxconn=8192
+
+# turn off smt
+sudo ppc64_cpu --smt=off
+
+# turn off irqbalance
+sudo systemctl stop irqbalance
+
