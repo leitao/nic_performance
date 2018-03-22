@@ -1,3 +1,7 @@
-#!/bin/bash -x
+#!/bin/bash
 TIME=${1:-10}
-numactl -l iperf -c $TARGET1 -t $TIME  -P 8 2>&1 > first
+
+# on POWER9 NODE = 0
+NODE=0
+
+numactl -l  -N  $NODE iperf $REVERSE -c $TARGET1 -t $TIME  -P $JOBS 2>&1 > first

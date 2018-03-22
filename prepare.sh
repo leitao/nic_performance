@@ -43,3 +43,12 @@ sudo ppc64_cpu --smt=off
 # turn off irqbalance
 sudo systemctl stop irqbalance
 
+
+
+## Turn on large receive offload
+
+sudo ethtool -K eth4 lro on
+sudo ethtool -K eth2 lro on
+sudo ethtool -K enP48p1s0f0 lro on
+sudo ethtool -K enP48p1s0f1 lro on
+
