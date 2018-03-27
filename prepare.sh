@@ -47,8 +47,13 @@ sudo systemctl stop irqbalance
 
 ## Turn on large receive offload
 
-sudo ethtool -K eth4 lro off
-sudo ethtool -K eth2 lro off
-sudo ethtool -K enP48p1s0f0 lro off
-sudo ethtool -K enP48p1s0f1 lro off
+sudo ethtool -K eth4 lro on
+sudo ethtool -C eth4 adaptive-rx off
+sudo ethtool -K eth2 lro on
+sudo ethtool -C eth2 adaptive-rx off
+
+sudo ethtool -K enP48p1s0f0 lro on
+sudo ethtool -C enP48p1s0f0 adaptive-rx off
+sudo ethtool -K enP48p1s0f1 lro on
+sudo ethtool -C enP48p1s0f1 adaptive-rx off
 

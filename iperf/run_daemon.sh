@@ -11,4 +11,4 @@ iperf3 -s -D 2>&1 >/dev/null
 numactl -l -N 0 iperf -s -p 5001 -D 2>&1 >/dev/null
 
 # for 10. connection
-numactl -l -N 8 iperf -s -p 5010 -D 2>&1 >/dev/null
+numactl -l -N 0 iperf -s -p 5010 -D 2>&1 >/dev/null
